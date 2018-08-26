@@ -2,10 +2,9 @@ import os
 
 from flask import Flask
 from flask import jsonify
-from flask import json
 import math
 import sqlite3
-
+from config import MAP_BOX_API_KEY
 import requests
 
 def create_app(test_config=None):
@@ -44,7 +43,8 @@ def create_app(test_config=None):
 
     @app.route('/getRouteInfo')
     def getRouteInfo(sourceLat, sourceLong, destLat, destLong):
-        r = requests.get('https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + sourceLat + ',' + sourceLong + ';' + destLat + ',' + destLong + '?access_token=pk.eyJ1IjoiYnVja3MiLCJhIjoiY2psOWh4NWZjM3R0dDNwbnNyMHVhcm54aiJ9.w4kFjaIepPoSGg7vueYP9g&steps=true')
+        r = requests.get('https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + sourceLat + ',' +
+                         sourceLong + ';' + destLat + ',' + destLong + '?access_token='+MAP_BOX_API_KEY+'&steps=true')
         apiResponse = jsonify(r.json())
         return apiResponse
         # return 'Total time: ' + apiResponse.routes[0].duration + ' Total distance: ' + apiResponse.routes[0].distance
