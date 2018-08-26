@@ -1,18 +1,34 @@
 from flask import Flask
 from flask import request
+from flask import jsonify
 import requests
 import json
 import math
 import sqlite3
-from mapbox_api import getRouteInfo
+from api.mapbox_api import getRouteInfo
+from api.distance_matrix_api import getDitanceAndTime
 
 app = Flask(__name__)
 
-@app.route('/getPublicTransport', methods = ['POST'])
-def getPublicTransport():
+
+def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
+    nearestMetroLocationsToSource, nearestMetroLocationsToDest = getPublicTransport(sourceLat, sourceLong, destLat, destLong)
+    totalJourneyTime = math.inf
+    sourceDestMetroCombo = []
+    for sourceMetro in nearestMetroLocationsToSource:
+        for destMetro in nearestMetroLocationsToDest:
+            routeInfo = getTotalJourneyTime(sourceMetro, destMetro)
+            if routeInfo['duration'] < totalJourneyTime:
+                totalJourneyTime = routeInfo['duration']
+                sourceDestMetroCombo['source'] = sourceMetro
+                sourceDestMetroCombo['dest'] = destMetro
+
+    return nearestMetroLocationsToSource, nearestMetroLocationsToDest
+
+
+def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     # Latitude --> 1 deg = 110.574 km
     # Longitude --> 1 deg = 111.320*cos(latitude in radians) km
-    return request.form
     maxDistance = 1
     radiusIncrement = 1
     pi = 22/7
@@ -37,6 +53,7 @@ def getPublicTransport():
         for metro in metroLocations:
             distance = pow((pow((metro.lat-sourceLat)*110.574, 2) + pow((metro.long-sourceLong)*111.320*math.cos(cityLat/180*pi), 2)), 0.5)
             if distance < maxDistance:
+                # metro.distance = distance
                 nearestMetroLocationsToSource.append(metro)
         maxDistance = maxDistance + radiusIncrement
 
@@ -46,6 +63,7 @@ def getPublicTransport():
         for metro in metroLocations:
             distance = pow((pow((metro.lat-destLat)*110.574, 2) + pow((metro.long-destLong)*111.320*math.cos(cityLat/180*pi), 2)), 0.5)
             if distance < maxDistance:
+                # metro.distance = distance
                 nearestMetroLocationsToDest.append(metro)
         maxDistance = maxDistance + radiusIncrement
 
@@ -57,7 +75,7 @@ def getPublicTransport():
 
     for sourceMetro in nearestMetroLocationsToSource:
         routeFromSourceToMetro = getRouteInfo(sourceLat, sourceLong, sourceMetro.latitude, sourceMetro.longitude)
-        timeFromSourceToMetro = directRoute.routes[0].duration
+        timeFromSourceToMetro = routeFromSourceToMetro.routes[0].duration
         # if time from source to metro itself exceeds direct pathing time, remove
         if timeFromSourceToMetro > directTime:
             nearestMetroLocationsToSource.remove(sourceMetro)
@@ -65,10 +83,35 @@ def getPublicTransport():
     # similarly for destination
     for destMetro in nearestMetroLocationsToDest:
         routeFromMetroToDest = getRouteInfo(destMetro.latitude, destMetro.longitude, destLat, destLong)
-        timeFromMetroToDest = directRoute.routes[0].duration
+        timeFromMetroToDest = routeFromMetroToDest.routes[0].duration
         # if time from source to metro itself exceeds direct pathing time, remove
         if timeFromMetroToDest > directTime:
             nearestMetroLocationsToSource.remove(destMetro)
+
+    return nearestMetroLocationsToSource, nearestMetroLocationsToDest
+
+
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(
+            current_app.config['DATABASE'],
+            detect_types=sqlite3.PARSE_DECLTYPES
+        )
+        g.db.row_factory = sqlite3.Row
+
+    return g.db
+
+
+def close_db(e=None):
+    db = g.pop('db', None)
+
+    if db is not None:
+        db.close()
+
+
+def getTotalJourneyTime(sourceMetro, destMetro):
+    return ''
+
 
 if __name__ == '__main__':
    app.run()
