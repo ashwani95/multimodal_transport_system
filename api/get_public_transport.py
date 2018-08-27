@@ -11,8 +11,6 @@ from config import UBER_API_KEY
 
 
 def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
-    print(sourceLat)
-    return sourceLat
     nearestMetroLocationsToSource, nearestMetroLocationsToDest = getPublicTransport(sourceLat, sourceLong, destLat, destLong)
     totalJourneyTime = math.inf
     sourceDestMetroCombo = []
