@@ -1,7 +1,7 @@
 from flask import Flask
 import requests
 import json
-from api.config import DISTANCE_MATRIX_API_KEY
+from config import DISTANCE_MATRIX_API_KEY
 
 url = "https://maps.googleapis.com/maps/api/distancematrix/json"
 API_KEY=DISTANCE_MATRIX_API_KEY
