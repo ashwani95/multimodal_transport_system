@@ -123,6 +123,8 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
 
 
 def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro):
+    totalTime = 0
+    totalPrice = 0
     sourceMetroLat = sourceMetro["coordinates"].decode().split(", ")[0]
     sourceMetroLong = sourceMetro["coordinates"].decode().split(", ")[1]
     destMetroLat = destMetro["coordinates"].decode().split(", ")[0]
@@ -132,20 +134,35 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
     firstLeg = getUberData(sourceLat, sourceLong, sourceMetroLat, sourceMetroLong)
     firstLegTime = firstLeg['prices'][0]['duration']
     firstLegPrice = firstLeg['prices'][0]['estimate']
+    totalTime = totalTime + int(firstLegTime)
+    totalPrice = totalPrice + int(firstLegPrice)
     print(firstLegTime)
 
     # Step 2 - get next ETA for bus/metro from that station
+    waitingTime = 500
+    totalTime = totalTime + int(waitingTime)
 
     # Step 3 - time taken to travel from sourceMetro to destMetro
+    secondLeg = []
+    secondLegTime = 1800
+    secondLegPrice = 25
+    totalTime = totalTime + int(secondLegTime)
+    totalPrice = totalPrice + int(secondLegPrice)
 
     # Step 4 - time taken to travel from destMetro to dest
     endLeg = getUberData(destMetroLat, destMetroLong, destLat, destLong)
     endLegTime = endLeg['prices'][0]['duration']
     endLegPrice = endLeg['prices'][0]['estimate']
+    totalTime = totalTime + int(endLegTime)
+    totalPrice = totalPrice + int(endLegPrice)
     print(firstLegTime)
 
     # Step 5 - add all times, including the waiting time
-    return ''
+    result = {
+        "totalTime": totalTime,
+        "totalPrice": totalPrice
+    }
+    return json.dumps(result)
 
 def getUberData(sourceLat, sourceLong, destLat, destLong):
     uberApiURL = "https://api.uber.com/v1.2/estimates/price"
