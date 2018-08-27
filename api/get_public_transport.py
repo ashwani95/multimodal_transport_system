@@ -5,13 +5,14 @@ import requests
 import json
 import math
 import sqlite3
-from api.mapbox_api import getRouteInfo
-from api.distance_matrix_api import getDitanceAndTime
-
-app = Flask(__name__)
+from mapbox_api import getRouteInfo
+from distance_matrix_api import getDitanceAndTime
+from config import UBER_API_KEY
 
 
 def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
+    print(sourceLat)
+    return sourceLat
     nearestMetroLocationsToSource, nearestMetroLocationsToDest = getPublicTransport(sourceLat, sourceLong, destLat, destLong)
     totalJourneyTime = math.inf
     sourceDestMetroCombo = []
@@ -23,11 +24,13 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
             #     totalJourneyTime = routeInfo['time']
             #     sourceDestMetroCombo['source'] = sourceMetro
             #     sourceDestMetroCombo['dest'] = destMetro
-            totalRouteTime = getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro)
-            if totalRouteTime < totalJourneyTime:
-                totalJourneyTime = totalRouteTime
-                sourceDestMetroCombo['source'] = sourceMetro
-                sourceDestMetroCombo['dest'] = destMetro
+            totalRouteDetails = getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro)
+            # if totalRouteTime < totalJourneyTime:
+            # totalJourneyTime = totalRouteTime
+            sourceDestMetroCombo['source'] = sourceMetro
+            sourceDestMetroCombo['dest'] = destMetro
+            sourceDestMetroCombo['time'] = totalRouteDetails
+            sourceDestMetroCombo['price'] = totalRouteDetails
 
     return nearestMetroLocationsToSource, nearestMetroLocationsToDest
 
@@ -47,7 +50,7 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     # get this data from db
     db = get_db()
     d.execute(
-        'SELECT * FROM bus_shelters;'
+        'SELECT * FROM public_coordinates;'
     ).fetchall()
     metroLocations = []
     nearestMetroLocationsToSource = []
@@ -117,14 +120,26 @@ def close_db(e=None):
 
 def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro):
     # Step 1 - get time taken from source to sourceMetro
-    firstLeg = getDitanceAndTime(sourceLat, sourceLong, sourceMetro)
-    firstLegTime = firstLeg['time']
+    uberApiURL = "https://api.uber.com/v1.2/estimates/price"
+    uberQueryString = {
+        "start_latitude": sourceLat,
+        "start_longitude": sourceLong,
+        "end_latitude": destLat,
+        "end_longitude": destLong
+    }
+    uberHeaders = {
+        'Authorization': "Token " + UBER_API_KEY,
+        'Accept-Language': "en_US",
+        'Content-Type': "application/json"
+    }
+    firstLeg = requests.request("GET", uberApiURL, headers=uberHeaders, params=uberQueryString)
+    firstLegTime = firstLeg['prices'][0]['duration']
+    firstLegPrice = firstLeg['prices'][0]['estimate']
     # Step 2 - get next ETA for bus/metro from that station
+
     # Step 3 - time taken to travel from sourceMetro to destMetro
     # Step 4 - time taken to travel from destMetro to dest
     # Step 5 - add all times, including the waiting time
     return ''
 
-
-if __name__ == '__main__':
-   app.run()
+# getFastestRoute(28.2, 77.2, 28.5, 77.6)
