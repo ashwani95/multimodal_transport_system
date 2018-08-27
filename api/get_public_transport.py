@@ -183,4 +183,4 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
 
 
 # getFastestRoute(28.6, 77.2, 28.5, 77.32)
-getPublicTransport(28.6, 77.2, 28.5, 77.32)
+# getPublicTransport(28.6, 77.2, 28.5, 77.32)

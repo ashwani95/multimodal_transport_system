@@ -12,7 +12,10 @@ def getRouteInfo(sourceLat, sourceLong, destLat, destLong):
         'access_token': MAP_BOX_API_KEY,
         'steps': 'true'
     }
-    apiResponse = requests.request("GET", url, params=queryString)
+    headers = {
+        'Content-Type': "application/json"
+    }
+    apiResponse = requests.request("GET", url, headers=headers, params=queryString)
     jsonResponse = apiResponse.json()
     print(jsonResponse["message"])
     if(jsonResponse['routes'] is None):
