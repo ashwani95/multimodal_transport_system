@@ -17,9 +17,15 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
     sourceDestMetroCombo = []
     for sourceMetro in nearestMetroLocationsToSource:
         for destMetro in nearestMetroLocationsToDest:
-            routeInfo = getTotalJourneyTime(sourceMetro, destMetro)
-            if routeInfo['duration'] < totalJourneyTime:
-                totalJourneyTime = routeInfo['duration']
+            # this must take into account the waiting time according the next train/metro's arrival
+            # routeInfo = getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro)
+            # if routeInfo['time'] < totalJourneyTime:
+            #     totalJourneyTime = routeInfo['time']
+            #     sourceDestMetroCombo['source'] = sourceMetro
+            #     sourceDestMetroCombo['dest'] = destMetro
+            totalRouteTime = getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro)
+            if totalRouteTime < totalJourneyTime:
+                totalJourneyTime = totalRouteTime
                 sourceDestMetroCombo['source'] = sourceMetro
                 sourceDestMetroCombo['dest'] = destMetro
 
@@ -109,7 +115,14 @@ def close_db(e=None):
         db.close()
 
 
-def getTotalJourneyTime(sourceMetro, destMetro):
+def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro):
+    # Step 1 - get time taken from source to sourceMetro
+    firstLeg = getDitanceAndTime(sourceLat, sourceLong, sourceMetro)
+    firstLegTime = firstLeg['time']
+    # Step 2 - get next ETA for bus/metro from that station
+    # Step 3 - time taken to travel from sourceMetro to destMetro
+    # Step 4 - time taken to travel from destMetro to dest
+    # Step 5 - add all times, including the waiting time
     return ''
 
 
