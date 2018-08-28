@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from config import MAP_BOX_API_KEY
+from api.config import MAP_BOX_API_KEY
 import requests
 import json
 

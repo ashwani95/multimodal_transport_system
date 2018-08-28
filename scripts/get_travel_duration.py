@@ -26,12 +26,17 @@ def create_tranform_set():
     X = sc_X.fit_transform(X)
     y = sc_y.fit_transform(y)
 
-def predict_time(distance):
-    y_pred = sc_y.inverse_transform(loaded_model.predict(sc_X.transform(np.array([[distance]]))))
-    print(y_pred)
-
-create_tranform_set()
-i = 0
-while i<=100:
-    predict_time(i)
-    i+=1
+def predict_time(distance,distance_matrix_time):
+    distance = distance / 1000
+    estimate_time = sc_y.inverse_transform(loaded_model.predict(sc_X.transform(np.array([[distance]]))))
+    accuracy = (abs(distance_matrix_time - estimate_time) / estimate_time) * 100.0
+    if accuracy >80 and accuracy <= 100:
+        time_in_seconds =  estimate_time
+    else:
+        time_in_seconds =  distance_matrix_time
+    minutes, seconds = divmod(time_in_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    if seconds > 0:
+        minutes+=1
+    final_estimate_time = str(int(hours)) + " hours "+str(int(minutes))+" mins"
+    return final_estimate_time

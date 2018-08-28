@@ -8,8 +8,8 @@ import sqlite3
 # import _mysql
 import csv
 from mapbox_api import getRouteInfo
-from distance_matrix_api import getDistanceAndTime
-from config import UBER_API_KEY
+from api.distance_matrix_api import getDistanceAndTime
+from api.config import UBER_API_KEY
 
 # db = _mysql.connect("localhost", "root", "", "commute")
 
