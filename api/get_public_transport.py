@@ -2,9 +2,10 @@ import requests
 import json
 import math
 import csv
-from mapbox_api import getRouteInfo
-from api.distance_matrix_api import getDistanceAndTime
-from api.config import UBER_API_KEY
+# from mapbox_api import getRouteInfo
+from distance_matrix_api import getDistanceAndTime
+from config import UBER_API_KEY
+import time
 
 # db = _mysql.connect("localhost", "root", "", "commute")
 
@@ -14,6 +15,7 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
     totalJourneyTime = math.inf
     allSourceDestCombos = []
     sourceDestMetroCombo = []
+    breakOutOfLoop = False
     for sourceMetro in nearestMetroLocationsToSource:
         for destMetro in nearestMetroLocationsToDest:
             # this must take into account the waiting time according the next train/metro's arrival
@@ -29,11 +31,36 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
             # sourceDestMetroCombo['dest'] = destMetro
             # sourceDestMetroCombo['time'] = totalRouteDetails["totalTime"]
             # sourceDestMetroCombo['price'] = totalRouteDetails["totalPrice"]
-            sourceDestMetroCombo = {'source':sourceMetro,'dest':destMetro,'time':totalRouteDetails["totalTime"],
-                                    'price':totalRouteDetails["totalPrice"]}
-            allSourceDestCombos.append(sourceDestMetroCombo)
+            if totalRouteDetails["isSourceCab"] is True and totalRouteDetails["isDestCab"] is True:
+                sourceDestMetroCombo = {
+                    'source': sourceMetro,
+                    'dest': destMetro,
+                    'totalTime': totalRouteDetails["totalTime"],
+                    'totalPrice': totalRouteDetails["totalPrice"],
+                    'otherDetails': totalRouteDetails
+                }
+                allSourceDestCombos.append(sourceDestMetroCombo)
+                breakOutOfLoop = True
+                break
+        if breakOutOfLoop is True:
+            break
 
-    return allSourceDestCombos
+    response = {
+        'message': 'Take cab till ' + str(allSourceDestCombos[0]['source']['stopname']) + ', take metro from ' + str(allSourceDestCombos[0]['source']['stopname']) + ' ,get down from metro at ' + str(allSourceDestCombos[0]['dest']['stopname']) + ', take cab till destination',
+        'totalPrice': str(allSourceDestCombos[0]['totalPrice']),
+        'priceBreakdown': [
+            {
+                'firstLeg': str(allSourceDestCombos[0]['otherDetails']['firstLegPrice'])
+            },
+            {
+                'secondLeg': '25'
+            },
+            {
+                'endLeg': str(allSourceDestCombos[0]['otherDetails']['endLegPrice'])
+            }
+        ]
+    }
+    return response
 
 
 def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
@@ -142,12 +169,17 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
     destMetroLong = destMetro["coordinates"].split(", ")[1]
 
     # Step 1 - get time taken from source to sourceMetro
+    sourceCabFound = False
     firstLeg = getUberData(sourceLat, sourceLong, sourceMetroLat, sourceMetroLong)
-    firstLegTime = firstLeg['prices'][0]['duration']
-    firstLegPrice = firstLeg['prices'][0]['estimate']
-    firstLegPrice = firstLegPrice[1:].split('-')[0]
-    totalTime = totalTime + int(firstLegTime)
-    totalPrice = totalPrice + int(firstLegPrice)
+    firstLegPrice = 0
+    if firstLeg['prices'] is not None:
+        if len(firstLeg['prices']) > 0:
+            sourceCabFound = True
+            firstLegTime = firstLeg['prices'][0]['duration']
+            firstLegPrice = firstLeg['prices'][0]['estimate']
+            firstLegPrice = firstLegPrice[1:].split('-')[0]
+            totalTime = totalTime + int(firstLegTime)
+            totalPrice = totalPrice + int(firstLegPrice)
 
     # Step 2 - get next ETA for bus/metro from that station
     waitingTime = 500
@@ -161,17 +193,26 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
     totalPrice = totalPrice + int(secondLegPrice)
 
     # Step 4 - time taken to travel from destMetro to dest
+    destCabFound = False
+    endLegPrice = 0
     endLeg = getUberData(destMetroLat, destMetroLong, destLat, destLong)
-    endLegTime = endLeg['prices'][0]['duration']
-    endLegPrice = endLeg['prices'][0]['estimate']
-    endLegPrice = endLegPrice[1:].split('-')[0]
-    totalTime = totalTime + int(endLegTime)
-    totalPrice = totalPrice + int(endLegPrice)
+    if endLeg['prices'] is not None:
+        if len(endLeg['prices']) > 0:
+            destCabFound = True
+            endLegTime = endLeg['prices'][0]['duration']
+            endLegPrice = endLeg['prices'][0]['estimate']
+            endLegPrice = endLegPrice[1:].split('-')[0]
+            totalTime = totalTime + int(endLegTime)
+            totalPrice = totalPrice + int(endLegPrice)
 
     # Step 5 - add all times, including the waiting time
     result = {
         "totalTime": totalTime,
-        "totalPrice": totalPrice
+        "totalPrice": totalPrice,
+        "isSourceCab": sourceCabFound,
+        "isDestCab": destCabFound,
+        "firstLegPrice": firstLegPrice,
+        "endLegPrice": endLegPrice
     }
     return result
 
@@ -195,3 +236,4 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
 
 print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
 # getPublicTransport(28.6, 77.2, 28.5, 77.32)
+# getUberData(28.6, 77.2, 28.5, 77.32)
