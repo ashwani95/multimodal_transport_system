@@ -5,12 +5,13 @@ import requests
 import json
 import math
 import sqlite3
-import _mysql
+# import _mysql
+import csv
 from mapbox_api import getRouteInfo
 from distance_matrix_api import getDitanceAndTime
 from config import UBER_API_KEY
 
-db = _mysql.connect("localhost", "root", "", "commute")
+# db = _mysql.connect("localhost", "root", "", "commute")
 
 
 def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
@@ -46,12 +47,26 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     pi = 22/7
     cityLat = 28.6
     metroLocations = []
+    # **********************************************************************
+    # **********************************************************************
+    # **********************************************************************
+    # **********************************************************************
     # get this data from db
-    db.query(
-        'SELECT * FROM public_coordinates'
-    )
-    r = db.store_result()
-    metroLocations = r.fetch_row(0, 1)
+    # db.query(
+    #     'SELECT * FROM public_coordinates'
+    # )
+    # r = db.store_result()
+    # metroLocations = r.fetch_row(0, 1)
+    # **********************************************************************
+    # **********************************************************************
+    # **********************************************************************
+    # **********************************************************************
+
+    with open('resources/public_coordinates.csv', 'r' ) as theFile:
+        reader = csv.DictReader(theFile)
+        for line in reader:
+            metroLocations.append(line)
+
     nearestMetroLocationsToSource = []
     nearestMetroLocationsToDest = []
 
@@ -60,8 +75,11 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     sourceMetroFound = False
     while maxDistance < 10:
         for metro in metroLocations:
-            metroLat = float(metro['coordinates'].decode().split(", ")[0])
-            metroLong = float(metro['coordinates'].decode().split(", ")[1])
+            # use when fetching from db
+            # metroLat = float(metro['coordinates'].decode().split(", ")[0])
+            # metroLong = float(metro['coordinates'].decode().split(", ")[1])
+            metroLat = float(metro['coordinates'].split(", ")[0])
+            metroLong = float(metro['coordinates'].split(", ")[1])
             distance = pow((pow((metroLat-sourceLat)*110.574, 2) + pow((metroLong-sourceLong)*111.320*math.cos(cityLat/180*pi), 2)), 0.5)
             if distance < maxDistance:
                 sourceMetroFound = True
@@ -80,8 +98,11 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     # repeat for destination
     while maxDistance < 10:
         for metro in metroLocations:
-            metroLat = float(metro['coordinates'].decode().split(", ")[0])
-            metroLong = float(metro['coordinates'].decode().split(", ")[1])
+            # use when fetching from db
+            # metroLat = float(metro['coordinates'].decode().split(", ")[0])
+            # metroLong = float(metro['coordinates'].decode().split(", ")[1])
+            metroLat = float(metro['coordinates'].split(", ")[0])
+            metroLong = float(metro['coordinates'].split(", ")[1])
             distance = pow((pow((metroLat-destLat)*110.574, 2) + pow((metroLong-destLong)*111.320*math.cos(cityLat/180*pi), 2)), 0.5)
             if distance < maxDistance:
                 destMetroFound = True
@@ -183,4 +204,4 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
 
 
 # getFastestRoute(28.6, 77.2, 28.5, 77.32)
-# getPublicTransport(28.6, 77.2, 28.5, 77.32)
+getPublicTransport(28.6, 77.2, 28.5, 77.32)
