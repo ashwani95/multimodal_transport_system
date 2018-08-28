@@ -97,7 +97,7 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     # calculate distance of each metro station from source
     # this would be inclusive of auto stands/bus stands, all maybe distinguished by a field in each row
     sourceMetroFound = False
-    while maxDistance < 10:
+    while maxDistance < 25:
         for metro in metroLocations:
             # use when fetching from db
             # metroLat = float(metro['coordinates'].decode().split(", ")[0])
@@ -116,7 +116,7 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     maxDistance = 1
     destMetroFound = False
     # repeat for destination
-    while maxDistance < 10:
+    while maxDistance < 25:
         for metro in metroLocations:
             # use when fetching from db
             # metroLat = float(metro['coordinates'].decode().split(", ")[0])
@@ -243,3 +243,4 @@ def getCabData(sourceLat, sourceLong, destLat, destLong):
 #print(getUberData(28.6, 77.2, 28.5, 77.32))
 #print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
 #print(getCabData(28.6, 77.2, 28.5, 77.32))
+
