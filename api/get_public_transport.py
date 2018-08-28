@@ -16,6 +16,13 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
     allSourceDestCombos = []
     sourceDestMetroCombo = []
     breakOutOfLoop = False
+    if len(nearestMetroLocationsToSource) == 0 or len(nearestMetroLocationsToDest) == 0:
+        response = {
+            'success': False,
+            'message': 'Location out of bounds',
+            'error': 422
+        }
+        return json.dumps(response)
     for sourceMetro in nearestMetroLocationsToSource:
         for destMetro in nearestMetroLocationsToDest:
             # this must take into account the waiting time according the next train/metro's arrival
@@ -46,6 +53,7 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
             break
 
     response = {
+        'success': True,
         'message': 'Take cab till ' + str(allSourceDestCombos[0]['source']['stopname']) + ', take metro from ' + str(allSourceDestCombos[0]['source']['stopname']) + ' ,get down from metro at ' + str(allSourceDestCombos[0]['dest']['stopname']) + ', take cab till destination',
         'totalPrice': str(allSourceDestCombos[0]['totalPrice']),
         'priceBreakdown': [
