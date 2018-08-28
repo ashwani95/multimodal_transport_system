@@ -30,10 +30,12 @@ def getFastestRoute(sourceLat, sourceLong, destLat, destLong):
             totalRouteDetails = getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro)
             # if totalRouteTime < totalJourneyTime:
             # totalJourneyTime = totalRouteTime
-            sourceDestMetroCombo['source'] = sourceMetro
-            sourceDestMetroCombo['dest'] = destMetro
-            sourceDestMetroCombo['time'] = totalRouteDetails["totalTime"]
-            sourceDestMetroCombo['price'] = totalRouteDetails["totalPrice"]
+            # sourceDestMetroCombo['source'] = sourceMetro
+            # sourceDestMetroCombo['dest'] = destMetro
+            # sourceDestMetroCombo['time'] = totalRouteDetails["totalTime"]
+            # sourceDestMetroCombo['price'] = totalRouteDetails["totalPrice"]
+            sourceDestMetroCombo = {'source':sourceMetro,'dest':destMetro,'time':totalRouteDetails["totalTime"],
+                                    'price':totalRouteDetails["totalPrice"]}
             allSourceDestCombos.append(sourceDestMetroCombo)
 
     return allSourceDestCombos
@@ -89,10 +91,6 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
             break
         maxDistance = maxDistance + radiusIncrement
 
-    print("Nearest Metros :\n")
-    print("To source :\n")
-    print(nearestMetroLocationsToSource)
-
     maxDistance = 1
     destMetroFound = False
     # repeat for destination
@@ -112,34 +110,27 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
             break
         maxDistance = maxDistance + radiusIncrement
 
-    print("Nearest Metros :\n")
-    print("To dest :\n")
-    print(nearestMetroLocationsToDest)
-
     # time taken if no public transport is considered - straight from source to dest
     # get from API
-    directRoute = getDistanceAndTime(sourceLat, sourceLong, destLat, destLong)
-    directTime = directRoute["time"]
-    directDistance = directRoute["distance"]
+    directRoute = json.loads(getDistanceAndTime(sourceLat, sourceLong, destLat, destLong))
+    directTime = directRoute["time_value"]
+    directDistance = directRoute["distance_value"]
 
     for sourceMetro in nearestMetroLocationsToSource:
         sourceMetroLat = float(sourceMetro['coordinates'].split(", ")[0])
         sourceMetroLong = float(sourceMetro['coordinates'].split(", ")[1])
-        routeFromSourceToMetro = getDistanceAndTime(sourceLat, sourceLong, sourceMetroLat, sourceMetroLong)
-        timeFromSourceToMetro = routeFromSourceToMetro["time"]
+        routeFromSourceToMetro = json.loads(getDistanceAndTime(sourceLat, sourceLong, sourceMetroLat, sourceMetroLong))
+        timeFromSourceToMetro = routeFromSourceToMetro["time_value"]
         # if time from source to metro itself exceeds direct pathing time, remove
         if timeFromSourceToMetro > directTime:
             nearestMetroLocationsToSource.remove(sourceMetro)
-
-    print("After removing\n")
-    print(nearestMetroLocationsToSource)
 
     # similarly for destination
     for destMetro in nearestMetroLocationsToDest:
         destMetroLat = float(destMetro['coordinates'].split(", ")[0])
         destMetroLong = float(destMetro['coordinates'].split(", ")[1])
-        routeFromMetroToDest = getDistanceAndTime(destMetroLat, destMetroLong, destLat, destLong)
-        timeFromMetroToDest = routeFromMetroToDest["time"]
+        routeFromMetroToDest = json.loads(getDistanceAndTime(destMetroLat, destMetroLong, destLat, destLong))
+        timeFromMetroToDest = routeFromMetroToDest["time_value"]
         # if time from source to metro itself exceeds direct pathing time, remove
         if timeFromMetroToDest > directTime:
             nearestMetroLocationsToSource.remove(destMetro)
@@ -162,7 +153,6 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
     firstLegPrice = firstLegPrice[1:].split('-')[0]
     totalTime = totalTime + int(firstLegTime)
     totalPrice = totalPrice + int(firstLegPrice)
-    print(firstLegTime)
 
     # Step 2 - get next ETA for bus/metro from that station
     waitingTime = 500
@@ -182,7 +172,6 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
     endLegPrice = endLegPrice[1:].split('-')[0]
     totalTime = totalTime + int(endLegTime)
     totalPrice = totalPrice + int(endLegPrice)
-    print(firstLegTime)
 
     # Step 5 - add all times, including the waiting time
     result = {
@@ -209,5 +198,5 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
     return routeData
 
 
-getFastestRoute(28.6, 77.2, 28.5, 77.32)
+print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
 # getPublicTransport(28.6, 77.2, 28.5, 77.32)
