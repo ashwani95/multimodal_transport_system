@@ -3,8 +3,8 @@ import json
 import math
 import csv
 # from mapbox_api import getRouteInfo
-from api.distance_matrix_api import getDistanceAndTime
-from api.config import UBER_API_KEY
+from distance_matrix_api import getDistanceAndTime
+from config import UBER_API_KEY
 import time
 
 # db = _mysql.connect("localhost", "root", "", "commute")
@@ -97,7 +97,7 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     # calculate distance of each metro station from source
     # this would be inclusive of auto stands/bus stands, all maybe distinguished by a field in each row
     sourceMetroFound = False
-    while maxDistance < 10:
+    while maxDistance < 25:
         for metro in metroLocations:
             # use when fetching from db
             # metroLat = float(metro['coordinates'].decode().split(", ")[0])
@@ -116,7 +116,7 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
     maxDistance = 1
     destMetroFound = False
     # repeat for destination
-    while maxDistance < 10:
+    while maxDistance < 25:
         for metro in metroLocations:
             # use when fetching from db
             # metroLat = float(metro['coordinates'].decode().split(", ")[0])
@@ -235,6 +235,9 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
 
 
 # print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
-# getPublicTransport(28.6, 77.2, 28.5, 77.32)
-#print(getUberData(28.6, 77.2, 28.5, 77.32))
-#print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
+# print(getPublicTransport(28.6, 77.2, 28.5, 77.32))
+# print(getUberData(28.6, 77.2, 28.5, 77.32))
+
+
+print(getFastestRoute(28.3, 77.4, 28.7, 77.3))
+# print(getPublicTransport(28.3, 77.4, 28.7, 77.3))
