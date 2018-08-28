@@ -8,7 +8,7 @@ import sqlite3
 # import _mysql
 import csv
 from mapbox_api import getRouteInfo
-from distance_matrix_api import getDitanceAndTime
+from distance_matrix_api import getDistanceAndTime
 from config import UBER_API_KEY
 
 # db = _mysql.connect("localhost", "root", "", "commute")
@@ -118,12 +118,14 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
 
     # time taken if no public transport is considered - straight from source to dest
     # get from API
-    directRoute = getRouteInfo(sourceLat, sourceLong, destLat, destLong)
+    directRoute = getDistanceAndTime(sourceLat, sourceLong, destLat, destLong)
     directTime = directRoute["time"]
     directDistance = directRoute["distance"]
 
     for sourceMetro in nearestMetroLocationsToSource:
-        routeFromSourceToMetro = getRouteInfo(sourceLat, sourceLong, sourceMetro.latitude, sourceMetro.longitude)
+        sourceMetroLat = float(sourceMetro['coordinates'].split(", ")[0])
+        sourceMetroLong = float(sourceMetro['coordinates'].split(", ")[1])
+        routeFromSourceToMetro = getDistanceAndTime(sourceLat, sourceLong, sourceMetroLat, sourceMetroLong)
         timeFromSourceToMetro = routeFromSourceToMetro["time"]
         # if time from source to metro itself exceeds direct pathing time, remove
         if timeFromSourceToMetro > directTime:
@@ -134,8 +136,10 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
 
     # similarly for destination
     for destMetro in nearestMetroLocationsToDest:
-        routeFromMetroToDest = getRouteInfo(destMetro.latitude, destMetro.longitude, destLat, destLong)
-        timeFromMetroToDest = routeFromMetroToDest.routes[0].duration
+        destMetroLat = float(destMetro['coordinates'].split(", ")[0])
+        destMetroLong = float(destMetro['coordinates'].split(", ")[1])
+        routeFromMetroToDest = getDistanceAndTime(destMetroLat, destMetroLong, destLat, destLong)
+        timeFromMetroToDest = routeFromMetroToDest["time"]
         # if time from source to metro itself exceeds direct pathing time, remove
         if timeFromMetroToDest > directTime:
             nearestMetroLocationsToSource.remove(destMetro)
