@@ -1,11 +1,6 @@
-from flask import Flask
-from flask import request
-from flask import jsonify
 import requests
 import json
 import math
-import sqlite3
-# import _mysql
 import csv
 from mapbox_api import getRouteInfo
 from api.distance_matrix_api import getDistanceAndTime
