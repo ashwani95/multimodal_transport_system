@@ -1,0 +1,88 @@
+import json
+import requests
+
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
+
+url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+API_KEY="AIzaSyALxb6V2Dy76_XwmhlPkh5K07DY83f8oDQ"
+
+headers = {'Cache-Control': "no-cache"}
+
+
+def getDistanceAndTime(sourceLat, sourceLong, destLat, destLong):
+    origin = str(sourceLat) + ", " + str(sourceLong)
+    destination = str(destLat) + ", " + str(destLong)
+    querystring = {"units": "metric", "origins": origin, "destinations": destination, "key": API_KEY}
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    distance_value,distance_text,time_value,time_text = parseResponse(response.json())
+    result = {"distance_value":distance_value,"time_value":time_value,"distance_text":distance_text,"time_text":time_text}
+    return json.dumps(result)
+
+
+def parseResponse(response):
+    element = response["rows"][0]["elements"][0]
+    distance_value = element["distance"]["value"]
+    distance_text = element["distance"]["text"]
+    time_value = element["duration"]["value"]
+    time_text = element["duration"]["text"]
+
+    return distance_value,distance_text,time_value,time_text
+
+
+
+
+def predict_time(distance,distance_matrix_time):
+    time_in_seconds =  distance_matrix_time
+    minutes, seconds = divmod(time_in_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    if seconds > 0:
+        minutes+=1
+    final_estimate_time = str(int(hours)) + " hours "+str(int(minutes))+" mins"
+    return final_estimate_time
+
+
+def start_app():
+    print("\n-------------------------------------------\n")
+    print("\nWelcome to Centralised Commutting System\n")
+
+    booking = True
+    while(booking):
+        status = create_travel_iternary()
+        if not status:
+            booking = False
+
+def create_travel_iternary():
+    print("\n-------------------------------------------\n")
+    print("\nEnter the below details for find your travel iternary\n")
+    print("\nInput Starting Location : (Latitude,Longitude)\n")
+    sourceLat = float(input("Latitude : "))
+    sourceLong = float(input("Longitude : "))
+    print("\nInput Destination Location : (Latitude,Longitude)\n")
+    destLat = float(input("Latitude : "))
+    destLong = float(input("Longitude : "))
+
+
+
+    distance_matrix_result = json.loads(getDistanceAndTime(sourceLat, sourceLong, destLat, destLong))
+    print("\n-------------------------------------------\n")
+    print("\nJourney Dsitance : " + str(distance_matrix_result["distance_text"]))
+    journey_time = predict_time(float(distance_matrix_result["distance_value"]),
+                                float(distance_matrix_result["time_value"]))
+    print("\nEstimated Time Duration :" + journey_time)
+
+    print("\n-------------------------------------------\n")
+
+    print("\nPress 1 to continue for another trip. Press 2 to exit\n")
+    choice = int(input("Your Option : "))
+    if choice == 1:
+        return True
+    else:
+        print("\nEnjoy Your Trip :D Bye!!\n")
+        return False
+
+
+start_app()

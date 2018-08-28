@@ -36,13 +36,13 @@ def create_travel_iternary():
         travel_iternary = json.loads(getFastestRoute(sourceLat, sourceLong, destLat, destLong))
         print("\n-------------------------------------------\n")
         print("\n"+str(travel_iternary["message"]))
-        print("\nJourney Cost : "+str(travel_iternary["totalPrice"]))
+        print("\nJourney Cost : Rs "+str(travel_iternary["totalPrice"]))
 
     else:
         travel_iternary = json.loads(getCabData(sourceLat, sourceLong, destLat, destLong))
         print("\n-------------------------------------------\n")
         print("\n"+str(travel_iternary["message"]))
-        print("\nJourney Cost : "+str(travel_iternary["totalPrice"]))
+        print("\nJourney Cost : Rs "+str(travel_iternary["totalPrice"]))
 
     distance_matrix_result = json.loads(getDistanceAndTime(sourceLat, sourceLong, destLat, destLong))
 
