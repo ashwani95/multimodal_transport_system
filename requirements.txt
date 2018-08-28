@@ -1,2 +1,6 @@
-Flask==0.12.3
 requests==2.18.4
+numpy
+pandas
+sklearn
+mysqlclient
+

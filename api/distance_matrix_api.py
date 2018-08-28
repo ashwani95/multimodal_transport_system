@@ -21,7 +21,13 @@ def getDistanceAndTime(sourceLat, sourceLong, destLat, destLong):
 
 def parseResponse(response):
     element = response["rows"][0]["elements"][0]
-    distance = element["distance"]["text"]
-    time = element["duration"]["text"]
+    distance = element["distance"]["value"]
+    time = element["duration"]["value"]
 
     return distance,time
+
+
+
+print(getDistanceAndTime(28.637408, 77.217423, 28.642385, 77.206003))
+
+
