@@ -3,8 +3,8 @@ import json
 import math
 import csv
 # from mapbox_api import getRouteInfo
-from distance_matrix_api import getDistanceAndTime
-from config import UBER_API_KEY
+from api.distance_matrix_api import getDistanceAndTime
+from api.config import UBER_API_KEY
 import time
 
 # db = _mysql.connect("localhost", "root", "", "commute")
@@ -241,11 +241,14 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
     routeData = routeData.json()
     return routeData
 
+def getCabData(sourceLat, sourceLong, destLat, destLong):
+    uber_data = getUberData(sourceLat, sourceLong, destLat, destLong)
+    response={'message':"Take a direct cab to your destination",'totalPrice':uber_data['prices'][0]['low_estimate']}
+    return json.dumps(response)
 
 # print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
-# print(getPublicTransport(28.6, 77.2, 28.5, 77.32))
-# print(getUberData(28.6, 77.2, 28.5, 77.32))
+# getPublicTransport(28.6, 77.2, 28.5, 77.32)
+#print(getUberData(28.6, 77.2, 28.5, 77.32))
+#print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
+#print(getCabData(28.6, 77.2, 28.5, 77.32))
 
-
-print(getFastestRoute(28.3, 77.4, 28.7, 77.3))
-# print(getPublicTransport(28.3, 77.4, 28.7, 77.3))
