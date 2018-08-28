@@ -9,17 +9,14 @@ API_KEY=DISTANCE_MATRIX_API_KEY
 headers = {'Cache-Control': "no-cache"}
 
 
-app = Flask(__name__)
-
-@app.route('/getDistanceMatrixData')
-def getDitanceAndTime():
-    origin = "12.981936, 77.645324"
-    destination = "12.965835, 77.647083"
+def getDistanceAndTime(sourceLat, sourceLong, destLat, destLong):
+    origin = str(sourceLat) + ", " + str(sourceLong)
+    destination = str(destLat) + ", " + str(destLong)
     querystring = {"units": "metric", "origins": origin, "destinations": destination, "key": API_KEY}
     response = requests.request("GET", url, headers=headers, params=querystring)
     distance,time = parseResponse(response.json())
     result = {"distance":distance,"time":time}
-    return json.dumps(result)
+    return result
 
 
 def parseResponse(response):
@@ -28,8 +25,3 @@ def parseResponse(response):
     time = element["duration"]["text"]
 
     return distance,time
-
-
-if __name__ == '__main__':
-   app.run()
-
