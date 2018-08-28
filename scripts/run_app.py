@@ -1,7 +1,7 @@
 import json
 from get_travel_duration import create_tranform_set,predict_time
 from api.distance_matrix_api import getDistanceAndTime
-
+from api.get_public_transport import getFastestRoute
 def start_app():
     create_tranform_set()
     print("\n-------------------------------------------\n")
@@ -22,15 +22,18 @@ def create_travel_iternary():
     print("\nInput Destination Location : (Latitude,Longitude)\n")
     destLat = float(input("Latitude : "))
     destLong = float(input("Longitude : "))
+    print("\nGive us a moment, we are creating your travel iternary ...\n")
 
-
-
-    distance_matrix_result = json.loads(getDistanceAndTime(sourceLat, sourceLong, destLat, destLong))
+    travel_iternary = json.loads(getFastestRoute(sourceLat, sourceLong, destLat, destLong))
     print("\n-------------------------------------------\n")
+    print("\n"+str(travel_iternary["message"]))
+    print("\nJourney Cost : "+str(travel_iternary["totalPrice"]))
+    distance_matrix_result = json.loads(getDistanceAndTime(sourceLat, sourceLong, destLat, destLong))
+
     print("\nJourney Dsitance : " + str(distance_matrix_result["distance_text"]))
     journey_time = predict_time(float(distance_matrix_result["distance_value"]),
                                 float(distance_matrix_result["time_value"]))
-    print("\nEstimated Time Duration :" + journey_time)
+    print("\nEstimated Time of Journey :" + journey_time)
 
     print("\n-------------------------------------------\n")
 
