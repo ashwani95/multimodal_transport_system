@@ -243,7 +243,11 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
 
 def getCabData(sourceLat, sourceLong, destLat, destLong):
     uber_data = getUberData(sourceLat, sourceLong, destLat, destLong)
-    response={'message':"Take a direct cab to your destination",'totalPrice':uber_data['prices'][0]['low_estimate']}
+    if not uber_data['prices']:
+        response = {'message': "Destination out of bounds",
+                    'totalPrice': "Invalid"}
+    else:
+        response={'message':"Take a direct cab to your destination",'totalPrice':uber_data['prices'][0]['low_estimate']}
     return json.dumps(response)
 
 # print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
@@ -251,4 +255,4 @@ def getCabData(sourceLat, sourceLong, destLat, destLong):
 #print(getUberData(28.6, 77.2, 28.5, 77.32))
 #print(getFastestRoute(28.6, 77.2, 28.5, 77.32))
 #print(getCabData(28.6, 77.2, 28.5, 77.32))
-
+#print(getCabData(22, 77, 23, 78))
