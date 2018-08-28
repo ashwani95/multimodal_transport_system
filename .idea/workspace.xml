@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ab460d9-b79b-4bc9-a819-77f092019694" name="Default" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/resources/public_coordinates.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/distance_matrix_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/distance_matrix_api.py" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/distance_matrix_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/mapbox_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/mapbox_api.py" afterDir="false" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,6 +20,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="mapbox_api.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/mapbox_api.py">
@@ -22,6 +30,14 @@
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
+=======
+    <leaf>
+      <file leaf-file-name="mapbox_api.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/mapbox_api.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="5" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
             </state>
           </provider>
         </entry>
@@ -29,8 +45,13 @@
       <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="75">
               <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
+=======
+            <state relative-caret-position="15">
+              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
             </state>
           </provider>
         </entry>
@@ -38,15 +59,21 @@
       <file leaf-file-name="distance_matrix_api.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/distance_matrix_api.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="480">
               <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
+=======
+            <state relative-caret-position="15">
+              <caret line="1" column="15" lean-forward="true" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name=".gitattributes" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitattributes">
           <provider selected="true" editor-type-id="text-editor" />
@@ -99,6 +126,18 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
               <caret line="2" column="1" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+=======
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="103" selection-start-line="2" selection-start-column="103" selection-end-line="2" selection-end-column="103" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
             </state>
           </provider>
         </entry>
@@ -116,8 +155,11 @@
     <findStrings>
       <find>create_app</find>
       <find>import os\n\nfrom flask import Flask\nfrom flask import jsonify\nfrom flask import json\nimport math\nimport sqlite3\nfrom config import MAP_BOX_API_KEY\nimport requests\n\ndef create_app\(test_config\=None\)\:\n\n    app\=Flask\(__name__\, instance_relative_config\=True\)\n    app\.config\.from_mapping\(\n        SECRET_KEY\=\'dev\'\,\n        DATABASE\=os\.path\.join\(app\.instance_path\, \'multi\-modal\.sqlite\'\)\,\n    \)\n\n    if test_config is None\:\n        app\.config\.from_pyfile\(\'config\.py\'\, silent\=True\)\n    else\:\n        app\.config\.from_mapping\(test_config\)\n\n    try\:\n        os\.makedirs\(app\.instance_path\)\n    except OSError\:\n        pass\n\n    def get_db\(\)\:\n        if \'db\' not in g\:\n            g\.db \= sqlite3\.connect\(\n                current_app\.config\[\'DATABASE\'\]\,\n                detect_types\=sqlite3\.PARSE_DECLTYPES\n            \)\n            g\.db\.row_factory \= sqlite3\.Row\n\n        return g\.db\n\n    def close_db\(e\=None\)\:\n        db \= g\.pop\(\'db\'\, None\)\n\n        if db is not None\:\n            db\.close\(\)\n\n    \@app\.route\(\'\/getRouteInfo\'\)\n    def getRouteInfo\(sourceLat\, sourceLong\, destLat\, destLong\)\:\n        r \= requests\.get\(\'https\:\/\/api\.mapbox\.com\/directions\/v5\/mapbox\/driving\-traffic\/\' \+ sourceLat \+ \'\,\' \+ sourceLong \+ \'\;\' \+ destLat \+ \'\,\' \+ destLong \+ \'\?access_token\=\'\+MAP_BOX_API_KEY\+\'\&amp;steps\=true\'\)\n        apiResponse \= jsonify\(r\.json\(\)\)\n        return apiResponse\n        \# return \'Total time\: \' \+ apiResponse\.routes\[0\]\.duration \+ \' Total distance\: \' \+ apiResponse\.routes\[0\]\.distance\n\n    \@app\.route\(\'\/getPublicTransport\'\)\n    def getPublicTransport\(\)\:\n        \# Latitude \-\-\&gt; 1 deg \= 110\.574 km\n        \# Longitude \-\-\&gt; 1 deg \= 111\.320\*cos\(latitude in radians\) km\n        maxDistance \= 1\n        radiusIncrement \= 1\n        pi \= 22\/7\n        cityLat \= 28\.6\n        \# input\n        sourceLat \= 0\n        sourceLong \= 0\n        destLat \= 0\n        destLong \= 0\n        \# get this data from db\n        db \= get_db\(\)\n        d\.execute\(\n            \'SELECT \* FROM bus_shelters\;\'\n        \)\.fetchall\(\)\n        metroLocations \= \[\]\n        nearestMetroLocationsToSource \= \[\]\n        nearestMetroLocationsToDest \= \[\]\n\n        \# calculate distance of each metro station distance from source\n        \# this would be inclusive of auto stands\/bus stands\, all maybe distinguished by a field in each row\n        while maxDistance \&lt; 10\:\n            for metro in metroLocations\:\n                distance \= pow\(\(pow\(\(metro\.lat\-sourceLat\)\*110\.574\, 2\) \+ pow\(\(metro\.long\-sourceLong\)\*111\.320\*math\.cos\(cityLat\/180\*pi\)\, 2\)\)\, 0\.5\)\n                if distance \&lt; maxDistance\:\n                    nearestMetroLocationsToSource\.append\(metro\)\n            maxDistance \= maxDistance \+ radiusIncrement\n\n        maxDistance \= 1\n        \# repeat for destination\n        while maxDistance \&lt; 10\:\n            for metro in metroLocations\:\n                distance \= pow\(\(pow\(\(metro\.lat\-destLat\)\*110\.574\, 2\) \+ pow\(\(metro\.long\-destLong\)\*111\.320\*math\.cos\(cityLat\/180\*pi\)\, 2\)\)\, 0\.5\)\n                if distance \&lt; maxDistance\:\n                    nearestMetroLocationsToDest\.append\(metro\)\n            maxDistance \= maxDistance \+ radiusIncrement\n\n        \# time taken if no public transport is considered \- straight from source to dest\n        \# get from API\n        directRoute \= getRouteInfo\(sourceLat\, sourceLong\, destLat\, destLong\)\n        directTime \= directRoute\.routes\[0\]\.duration\n        directDistance \= directRoute\.routes\[0\]\.distance\n\n        for sourceMetro in nearestMetroLocationsToSource\:\n            routeFromSourceToMetro \= getRouteInfo\(sourceLat\, sourceLong\, sourceMetro\.latitude\, sourceMetro\.longitude\)\n            timeFromSourceToMetro \= directRoute\.routes\[0\]\.duration\n            \# if time from source to metro itself exceeds direct pathing time\, remove\n            if timeFromSourceToMetro \&gt; directTime\:\n                nearestMetroLocationsToSource\.remove\(sourceMetro\)\n\n        \# similarly for destination\n        for destMetro in nearestMetroLocationsToDest\:\n            routeFromMetroToDest \= getRouteInfo\(destMetro\.latitude\, destMetro\.longitude\, destLat\, destLong\)\n            timeFromMetroToDest \= directRoute\.routes\[0\]\.duration\n            \# if time from source to metro itself exceeds direct pathing time\, remove\n            if timeFromMetroToDest \&gt; directTime\:\n                nearestMetroLocationsToSource\.remove\(destMetro\)\n\n    return app</find>
+<<<<<<< HEAD
       <find>print</find>
       <find>getDitanceAndTime</find>
+=======
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -128,6 +170,7 @@
       <list>
         <option value="$PROJECT_DIR$/requirementes.txt" />
         <option value="$PROJECT_DIR$/scripts/mapbox_api.py" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/scripts/__init__.py" />
         <option value="$PROJECT_DIR$/resources/__init__.py" />
         <option value="$PROJECT_DIR$/modules/__init__.py" />
@@ -142,6 +185,19 @@
         <option value="$PROJECT_DIR$/api/get_public_transport.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/api/distance_matrix_api.py" />
+=======
+        <option value="$PROJECT_DIR$/setup.sh" />
+        <option value="$PROJECT_DIR$/scripts/__init__.py" />
+        <option value="$PROJECT_DIR$/resources/__init__.py" />
+        <option value="$PROJECT_DIR$/modules/__init__.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/config.txt" />
+        <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/api/__init__.py" />
+        <option value="$PROJECT_DIR$/api/mapbox_api.py" />
+        <option value="$PROJECT_DIR$/api/distance_matrix_api.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
       </list>
     </option>
   </component>
@@ -175,6 +231,7 @@
               <item name="multimodal_transport_system" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
             </path>
+<<<<<<< HEAD
             <path>
               <item name="multimodal_transport_system" type="b2602c69:ProjectViewProjectNode" />
               <item name="multimodal_transport_system" type="462c0819:PsiDirectoryNode" />
@@ -185,6 +242,8 @@
               <item name="multimodal_transport_system" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
+=======
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
           </expand>
           <select />
         </subPane>
@@ -197,9 +256,12 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+<<<<<<< HEAD
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources" />
     </key>
+=======
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/api" />
       <recent name="$PROJECT_DIR$/gitignore" />
@@ -235,6 +297,7 @@
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
+<<<<<<< HEAD
       <window_info id="DB Browser" order="2" />
       <window_info anchor="bottom" id="DB Execution Console" order="7" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -271,12 +334,36 @@
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
+=======
+      <window_info id="DB Browser" />
+      <window_info anchor="bottom" id="DB Execution Console" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
+      <window_info id="Project Explorer" />
+      <window_info id="Job Explorer" />
+      <window_info anchor="bottom" id="Console" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -407,6 +494,15 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Make.sh" />
+=======
+    <entry file="file://$PROJECT_DIR$/Make.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="19" lean-forward="true" selection-start-column="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
     <entry file="file://$PROJECT_DIR$/modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -423,6 +519,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/config.txt" />
     <entry file="file://$PROJECT_DIR$/compliance/__init__.py" />
     <entry file="file://$PROJECT_DIR$/api/__init__.py">
@@ -438,6 +535,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -445,6 +544,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/api/distance_matrix_api.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="251">
@@ -551,6 +651,42 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
+=======
+    <entry file="file://$PROJECT_DIR$/config.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="103" selection-start-line="2" selection-start-column="103" selection-end-line="2" selection-end-column="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/compliance/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/mapbox_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="5" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/distance_matrix_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="15" lean-forward="true" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+>>>>>>> b43e19336c03eeb7c099aa44b71e1063a2a33cdc
         </state>
       </provider>
     </entry>
