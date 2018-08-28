@@ -150,15 +150,16 @@ def getPublicTransport(sourceLat, sourceLong, destLat, destLong):
 def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, destMetro):
     totalTime = 0
     totalPrice = 0
-    sourceMetroLat = sourceMetro["coordinates"].decode().split(", ")[0]
-    sourceMetroLong = sourceMetro["coordinates"].decode().split(", ")[1]
-    destMetroLat = destMetro["coordinates"].decode().split(", ")[0]
-    destMetroLong = destMetro["coordinates"].decode().split(", ")[1]
+    sourceMetroLat = sourceMetro["coordinates"].split(", ")[0]
+    sourceMetroLong = sourceMetro["coordinates"].split(", ")[1]
+    destMetroLat = destMetro["coordinates"].split(", ")[0]
+    destMetroLong = destMetro["coordinates"].split(", ")[1]
 
     # Step 1 - get time taken from source to sourceMetro
     firstLeg = getUberData(sourceLat, sourceLong, sourceMetroLat, sourceMetroLong)
     firstLegTime = firstLeg['prices'][0]['duration']
     firstLegPrice = firstLeg['prices'][0]['estimate']
+    firstLegPrice = firstLegPrice[1:].split('-')[0]
     totalTime = totalTime + int(firstLegTime)
     totalPrice = totalPrice + int(firstLegPrice)
     print(firstLegTime)
@@ -178,6 +179,7 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
     endLeg = getUberData(destMetroLat, destMetroLong, destLat, destLong)
     endLegTime = endLeg['prices'][0]['duration']
     endLegPrice = endLeg['prices'][0]['estimate']
+    endLegPrice = endLegPrice[1:].split('-')[0]
     totalTime = totalTime + int(endLegTime)
     totalPrice = totalPrice + int(endLegPrice)
     print(firstLegTime)
@@ -187,7 +189,7 @@ def getTotalJourneyTime(sourceLat, sourceLong, destLat, destLong, sourceMetro, d
         "totalTime": totalTime,
         "totalPrice": totalPrice
     }
-    return json.dumps(result)
+    return result
 
 def getUberData(sourceLat, sourceLong, destLat, destLong):
     uberApiURL = "https://api.uber.com/v1.2/estimates/price"
@@ -204,8 +206,8 @@ def getUberData(sourceLat, sourceLong, destLat, destLong):
     }
     routeData = requests.request("GET", uberApiURL, headers=uberHeaders, params=uberQueryString)
     routeData = routeData.json()
-    return json.dumps(routeData)
+    return routeData
 
 
-# getFastestRoute(28.6, 77.2, 28.5, 77.32)
-getPublicTransport(28.6, 77.2, 28.5, 77.32)
+getFastestRoute(28.6, 77.2, 28.5, 77.32)
+# getPublicTransport(28.6, 77.2, 28.5, 77.32)
