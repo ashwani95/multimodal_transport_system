@@ -1,3 +1,4 @@
 config.py
+distance_time_uber_movement.json
 *.pyc
 __pycache__/
